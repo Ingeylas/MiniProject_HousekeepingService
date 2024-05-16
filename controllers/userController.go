@@ -14,7 +14,7 @@ import (
 func GetUsers(c echo.Context) error {
 	var users []models.Users
 
-	if err := configs.DB.Find(&users).Error; err != nil {
+	if err := configs.DB.Preload("Bookings").Find(&users).Error; err != nil {
 		return c.JSON(http.StatusNotFound, map[string]interface{}{
 			"message": "Data Not Found",
 		})
@@ -48,23 +48,6 @@ func CreateUser(c echo.Context) error {
 
 	user.Created_At = time.Now() // set time now
 	user.Updated_At = time.Now() // set time now
-
-	// // Check id and make autoincrement
-	// idCount := int64(0)
-	// configs.DB.Model(&models.Users{}).Where("ID = ?", user.ID).Count(&idCount)
-
-	// if idCount > 0 {
-	// 	return c.JSON(http.StatusBadRequest, map[string]interface{}{
-	// 		"message": "ID already exists",
-	// 	})
-	// }
-	// user.ID = int(idCount + 1) // set id auto increment
-
-	// if err := configs.DB.Create(&user).Error; err != nil {
-	// 	return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-	// 		"message": "Failed to create user",
-	// 	})
-	// }
 
 	// Check the last ID and add autoincrement
 	UserIDCount := models.Users{}
