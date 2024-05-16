@@ -60,3 +60,19 @@ func CreateService(c echo.Context) error {
 		"data":    service,
 	})
 }
+
+func GetServiceByID(c echo.Context) error {
+	id := c.Param("id")
+	var service models.Services
+
+	if err := configs.DB.Preload("Housekeepers").Where("id = ?", id).First(&service).Error; err != nil {
+		return c.JSON(http.StatusNotFound, map[string]interface{}{
+			"message": "Data Not Found",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "Success Get Service",
+		"data":    service,
+	})
+}

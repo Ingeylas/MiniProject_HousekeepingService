@@ -99,3 +99,17 @@ func LoginUser(c echo.Context) error {
 	})
 
 }
+
+func GetUserbyId(c echo.Context) error {
+	id := c.Param("id")
+	var user models.Users
+	if err := configs.DB.Preload("Bookings").Where("id = ?", id).First(&user).Error; err != nil {
+		return c.JSON(http.StatusNotFound, map[string]interface{}{
+			"message": "Data Not Found",
+		})
+	}
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "Success Get User",
+		"data":    user,
+	})
+}
