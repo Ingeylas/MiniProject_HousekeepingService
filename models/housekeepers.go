@@ -19,5 +19,12 @@ type Housekeepers struct {
 	Bookings  []Bookings  `gorm:"foreignKey:HousekeepersID"` // one to many
 }
 
+type HousekeeperResponse struct {
+	ID       int    `json:"id" `
+	Name     string `json:"name" `
+	Password string `json:"password" `
+	Token    string `json:"token" `
+}
+
 // Schedules_ID int       `json:"schedule_id"`
 // Schedules    Schedules `gorm:"foreignKey:Schedules_ID;references:ID"`

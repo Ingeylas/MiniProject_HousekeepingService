@@ -107,7 +107,6 @@ func LoginUser(c echo.Context) error {
 	userResponse := models.UserResponse{
 		ID:       user.ID,
 		Username: user.Username,
-		Password: user.Password,
 		Token:    token,
 	}
 

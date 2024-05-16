@@ -7,6 +7,8 @@ import (
 
 	"time"
 
+	mids "rapikan/middlewares"
+
 	"github.com/labstack/echo/v4"
 )
 
@@ -108,5 +110,41 @@ func GetBookingsByHousekeeperID(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "Success Get Bookings",
 		"data":    bookings,
+	})
+}
+
+func LoginHousekeeper(c echo.Context) error {
+	housekeeper := models.Housekeepers{}
+	c.Bind(&housekeeper)
+
+	if err := configs.DB.Find(&housekeeper, "name = ? AND password = ?", housekeeper.Name, housekeeper.Password).Error; err != nil {
+		return c.JSON(http.StatusNotFound, map[string]interface{}{
+			"message": "Housekeeper Not Found",
+		})
+	}
+
+	if housekeeper.Name == "" || housekeeper.Password == "" {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "Name or Password cannot be empty",
+		})
+	}
+
+	token, err := mids.CreateToken(housekeeper.ID, housekeeper.Name)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"message": "Failed to create token",
+		})
+	}
+
+	housekeeperResponse := models.HousekeeperResponse{
+		ID:    housekeeper.ID,
+		Name:  housekeeper.Name,
+		Token: token,
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "Success Login Housekeeper",
+		"data":    housekeeperResponse,
 	})
 }

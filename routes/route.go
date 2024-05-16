@@ -23,6 +23,7 @@ func New() *echo.Echo {
 	e.POST("/housekeeper", controllers.CreateHousekeeper)      // Add Housekeeper
 	e.GET("/housekeepers", controllers.GetHousekeepers)        // Get All Housekeepers
 	e.GET("/housekeepers/:id", controllers.GetHousekeeperByID) // Get Housekeeper by ServiceID
+	e.POST("/loginHousekeeper", controllers.LoginHousekeeper)  // Login Housekeeper
 
 	e.POST("/schedule/:id", controllers.CreateSchedule)                         // Auto Generate Schedule on 1 day
 	e.GET("/schedules", controllers.GetSchedules)                               // Get All Schedules
@@ -45,6 +46,7 @@ func New() *echo.Echo {
 	eAuthJWT := e.Group("/jwt")
 	eAuthJWT.Use(mid.JWT([]byte(constants.SECRET_JWT)))
 	eAuthJWT.GET("/user", controllers.GetUsers)
+	eAuthJWT.GET("/housekeepers", controllers.GetHousekeepers)
 
 	return e
 }

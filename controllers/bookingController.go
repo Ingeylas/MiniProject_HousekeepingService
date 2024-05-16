@@ -17,7 +17,7 @@ type BookingData struct {
 func GetBookings(c echo.Context) error {
 	var bookings []models.Bookings
 
-	if err := configs.DB.Preload("Services").Preload("Payments").Find(&bookings).Error; err != nil {
+	if err := configs.DB.Preload("Services").Preload("Payments").Preload("Housekeepers").Preload("Schedules").Preload("Users").Find(&bookings).Error; err != nil {
 		return c.JSON(http.StatusNotFound, map[string]interface{}{
 			"message": "Data Not Found",
 		})
@@ -28,52 +28,6 @@ func GetBookings(c echo.Context) error {
 		"data":    bookings,
 	})
 }
-
-// func CreateBooking(c echo.Context) error {
-// 	if err := CreatePayment(c); err != nil {
-// 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-// 			"message": "Failed to create payment",
-// 		})
-// 	}
-// 	bookingData := BookingData{}
-
-// 	if err := c.Bind(&bookingData); err != nil {
-// 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-// 			"message": "Failed to bind booking data",
-// 		})
-// 	}
-// 	booking := models.Bookings{}
-
-// 	booking = bookingData.Booking
-
-// 	// Id autoincrement
-// 	BookingIDCount := models.Bookings{}
-// 	configs.DB.Model(&models.Bookings{}).Order("id desc").First(&BookingIDCount)
-// 	booking.ID = int(BookingIDCount.ID + 1)
-
-// 	// Calculate the total price
-// 	// var total float64
-// 	total := booking.Services.Price * float64(booking.Duration)
-// 	booking.Total = total
-
-// 	// Set the status to Awaiting Payment
-// 	booking.Status = models.Awaiting_Payment
-
-// 	// Set the created_at and updated_at
-// 	booking.Created_At = time.Now()
-// 	booking.Updated_At = time.Now()
-
-// 	if err := configs.DB.Create(&booking).Error; err != nil {
-// 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-// 			"message": "Failed to create booking",
-// 		})
-// 	}
-
-// 	return c.JSON(http.StatusOK, map[string]interface{}{
-// 		"message": "Success create booking",
-// 		"data":    booking,
-// 	})
-// }
 
 func CreateBooking(c echo.Context) error {
 	bookingData := BookingData{}
@@ -86,19 +40,6 @@ func CreateBooking(c echo.Context) error {
 
 	booking := bookingData.Booking
 	payment := bookingData.Payment
-
-	// //Check availibility
-	// var CheckAvail bool
-	// if err := configs.DB.Model(&models.Schedules{}).Select("Availbility").Where("id = ?", booking.SchedulesID).First(&CheckAvail).Error; err != nil {
-	// 	return c.JSON(http.StatusBadRequest, map[string]interface{}{
-	// 		"message": "Failed to check availibility",
-	// 	})
-	// }
-	// if !CheckAvail {
-	// 	return c.JSON(http.StatusBadRequest, map[string]interface{}{
-	// 		"message": "Housekeeper is not available",
-	// 	})
-	// }
 
 	//Check availibility
 	for i := booking.SchedulesID; i < booking.SchedulesID+booking.Duration; i++ {
