@@ -10,8 +10,8 @@ import (
 var DB *gorm.DB
 
 func InitDB() {
-	dsn := "root:12345678@tcp(localhost:3306)/mini_project1?charset=utf8mb4&parseTime=True&loc=Local"
-	// dsn := "root:UoDwePSjyklmQkTxBhpFtoSywcGaxrKm@tcp(monorail.proxy.rlwy.net:38918)/railway?charset=utf8mb4&parseTime=True&loc=Local"
+	// dsn := "root:12345678@tcp(localhost:3306)/mini_project1?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := "root:zPHXmQMHmGHoDNXypPcLKWQBPZrsjnqy@tcp(viaduct.proxy.rlwy.net:57758)/railway?charset=utf8mb4&parseTime=True&loc=Local"
 	var err error
 	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{}) // Assign the value to the existing DB variable
 
