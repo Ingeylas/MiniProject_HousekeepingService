@@ -54,6 +54,7 @@ func New() *echo.Echo {
 	eAuthJWT.GET("/service/:id", controllers.GetServiceByID)
 	eAuthJWT.GET("/housekeepers/:id", controllers.GetHousekeeperByID)
 	eAuthJWT.GET("/schedules/:id", controllers.GetScheduleByID)
+	eAuthJWT.POST("/booking", controllers.CreateBooking)
 	eAuthJWT.PUT("/booking/:id", controllers.UpdatePayment)
 
 	eAuthJWT2 := e.Group("/housekeeperjwt")
